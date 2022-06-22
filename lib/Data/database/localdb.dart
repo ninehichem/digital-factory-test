@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -5,14 +7,27 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:digitalfactory/Data/models/eventModel.dart';
 
-const String table = "_table";
-const String columnId = "columnid";
-const String activity = 'activity';
-const String accessibility = "accessibility";
-const String type = "type";
-const String participants = "participants";
-const String price = "price";
-const String key = "key";
+
+
+class Staticvar {
+static  String table = "Eventtable";
+static  String columnId = "columnid";
+static  String activity = 'activity';
+static  String accessibility = "accessibility";
+static  String type = "type";
+static  String participants = "participants";
+static  String price = "price";
+static  String key = "key";
+}
+
+// const String table1 = "Eventtable";
+// const String columnId1 = "columnid";
+// const String activity1 = 'activity';
+// const String accessibility1 = "accessibility";
+// const String type1 = "type";
+// const String participants1 = "participants";
+// const String price1 = "price";
+// const String key1 = "key";
 
 class Event {
   int? id;
@@ -21,42 +36,38 @@ class Event {
   late String type;
   late String participants;
   late String price;
-
   late String key;
 
-  Event(
-      {required this.accessibility,
-      required this.activity,
-      required this.key,
-      required this.participants,
-      required this.price,
-      required this.type});
+  Event();
 
   // convenience constructor to create a Word object
   Event.fromMap(Map<String, dynamic> map) {
-    id = map[columnId];
-    this.accessibility = map[accessibility];
-    this.activity = map[activity];
-    this.type = map[type];
-    this.participants = map[participants];
-    this.price = map[price];
-    this.key = map[key];
+    id = map[Staticvar.columnId];
+    accessibility = map[Staticvar.accessibility];
+    activity = map[ Staticvar.activity];
+    type = map[Staticvar.type];
+    participants = map[Staticvar.participants];
+    price = map[Staticvar.price];
+    key = map[Staticvar.key];
   }
+  
 
   // convenience method to create a Map from this Word object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      accessibility: this.accessibility,
-      activity: this.activity,
-      type: this.type,
-      participants: this.participants,
-      price: this.price,
-      key: this.key,
+      Staticvar.accessibility : this.accessibility,
+      Staticvar.activity: this.activity,
+      Staticvar.type: this.type,
+      Staticvar.participants : this.participants,
+      Staticvar.price: this.price,
+      Staticvar.key : this.key ,
+      Staticvar.columnId: id
     };
 
     if (id != null) {
-      map[columnId] = id;
+      map[Staticvar.columnId] = id;
     }
+
     return map;
   }
 }
@@ -86,38 +97,37 @@ class DataBaseHelper {
   }
 
   Future _onCreate(Database db, int version) async {
-
     await db.execute('''
-      CREATE TABLE $table (
-        $columnId INTEGER PRIMARY KEY,
-        $accessibility TEXT NOT NULL,
-        $activity TEXT NOT NULL,
-        $key TEXT NOT NULL,
-        $participants TEXT NOT NULL,
-        $price TEXT NOT NULL,
-        $type TEXT NOT NULL
+      CREATE TABLE ${Staticvar.table} (
+        ${Staticvar.columnId} INTEGER PRIMARY KEY,
+        ${Staticvar.accessibility} TEXT NOT NULL,
+        ${Staticvar.activity} TEXT NOT NULL,
+        ${Staticvar.key} TEXT NOT NULL,
+        ${Staticvar.participants} TEXT NOT NULL,
+        ${Staticvar.price} TEXT NOT NULL,
+        ${Staticvar.type} TEXT NOT NULL
         )
     ''');
-
- 
   }
 
   Future<int> insert(Event event) async {
     Database db = await database;
-    int id = await db.insert(table, event.toMap());
+
+    int id = await db.insert(Staticvar.table, event.toMap());
+    print('id === $id');
     return id;
   }
 
   Future<List?> queryAll() async {
     Database db = await database;
-    List<Map> maps = await db.query(table, columns: [
-      columnId,
-      accessibility,
-      activity,
-      key,
-      participants,
-      price,
-      type
+    List<Map> maps = await db.query(Staticvar.table, columns: [
+      Staticvar.columnId,
+      Staticvar.accessibility,
+      Staticvar.activity,
+      Staticvar.key,
+      Staticvar.participants,
+      Staticvar.price,
+      Staticvar.type
     ]);
     if (maps.length > 0) {
       return maps.toList();
@@ -127,6 +137,6 @@ class DataBaseHelper {
 
   Future<int> delete(int id) async {
     Database db = await database;
-    return await db.delete(table, where: '_id = ?', whereArgs: [id]);
+    return await db.delete(Staticvar.table, where: '_id = ?', whereArgs: [id]);
   }
 }

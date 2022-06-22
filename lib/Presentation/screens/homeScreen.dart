@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  DataBaseHelper? database = DataBaseHelper();
+  DataBaseHelper database = DataBaseHelper();
 
   var items = [
     "education",
@@ -144,16 +144,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text('Get by price')),
                         ElevatedButton(
                             onPressed: () {
-                              Event event = Event(
-                                  accessibility: state.eventModel!.accessibility
-                                      .toString(),
-                                  activity: state.eventModel!.activity,
-                                  key: state.eventModel!.key.toString(),
-                                  participants:
-                                      state.eventModel!.participants.toString(),
-                                  price: state.eventModel!.price.toString(),
-                                  type: state.eventModel!.type);
-                              database!.insert(event);
+                              Event event = Event();
+                              event.accessibility =
+                                  state.eventModel!.accessibility.toString();
+                              event.activity = state.eventModel!.activity;
+                              event.key = state.eventModel!.key.toString();
+                              event.participants =
+                                  state.eventModel!.participants.toString();
+                              event.price = state.eventModel!.price.toString();
+                              event.type = state.eventModel!.type.toString();
+
+                              database.insert(event);
                             },
                             child: Text('Add To Favorite')),
                       ]);
