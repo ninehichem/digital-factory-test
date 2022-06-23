@@ -52,13 +52,11 @@ class RequestService {
           .get(Uri.parse(randomeventprice + type.toString()), headers: {
         "Accept": "application/json; charset=utf-8",
       });
-      print(response.body);
-       var k = json.decode(response.body);
-      return jsonDecode(response.body);
 
+      return returnResponse(response);
     } catch (e) {
       print("e == $e");
-      return e;
+      //return e;
       // ignore: dead_code_catch_following_catch
     } on SocketException {
       print('No Internet connection');

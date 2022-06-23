@@ -38,12 +38,29 @@ class RandomeventCubit extends Cubit<RandomeventState> {
     try {
       emit(RandomeventLoading());
       randomEventRepository.getEventByPrice(price).then((value) {
-        print(value.activity);
-        emit(RandomeventSuccess(value));
+        if(value["error"] != "" ){
+      emit(RandomeventFailure(value["error"]));
+        }else{
+      emit(RandomeventSuccess(EventModel.fromJson(value)));
+        }
+        
+       
       });
     } catch (e) {
       print('e ============$e');
       emit(RandomeventFailure(e.toString()));
     }
   }
+
+
+ String dropdownvalue = 'education';
+
+  changeropdownvalue(String value) {
+    // if(value.isEmpty){
+    //   searchedtype = 'education';
+    // }
+    dropdownvalue = value;
+  }
+
+
 }

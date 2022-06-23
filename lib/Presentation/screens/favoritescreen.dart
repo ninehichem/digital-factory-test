@@ -2,6 +2,8 @@ import 'package:digitalfactory/business_logic/favoriteevent/favoriteevent_cubit.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../constants.dart';
+
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
 
@@ -21,18 +23,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   TextEditingController _controller = TextEditingController();
-  var items = [
-    "education",
-    "recreational",
-    "social",
-    "diy",
-    "charity",
-    "cooking",
-    "relaxation",
-    "music",
-    "busywork"
-  ];
-  String dropdownvalue = 'education';
+
 
   Widget _textfield() {
     return TextFormField(
@@ -45,6 +36,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   Widget _FilterbyType() {
     String value = context.watch<FavoriteeventCubit>().searchedtype;
+   
     return DropdownButton(
       value: value,
       icon: const Icon(Icons.keyboard_arrow_down),

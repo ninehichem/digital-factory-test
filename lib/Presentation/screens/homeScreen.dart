@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Data/repositories/randomeventrepo.dart';
 import '../../Data/webservices/requestRandomEvent.dart';
 import '../../business_logic/randomevent/randomevent_cubit.dart';
+import '../../constants.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -27,19 +28,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   DataBaseHelper database = DataBaseHelper();
 
-  var items = [
-    "education",
-    "recreational",
-    "social",
-    "diy",
-    "charity",
-    "cooking",
-    "relaxation",
-    "music",
-    "busywork"
-  ];
-  String dropdownvalue = 'education';
   double slidervalue = 0;
+  Widget dropdownbutton() {
+    String dropdownvalue = context.read<RandomeventCubit>().dropdownvalue;
+
+    return DropdownButton(
+      value: dropdownvalue,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      items: items.map((String items) {
+        return DropdownMenuItem(
+          onTap: () {},
+          value: items,
+          child: Text(items),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        context.read<RandomeventCubit>().changeropdownvalue(newValue!);
+        context.read<RandomeventCubit>().fetchEventbytype(newValue);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,25 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 20,
                         ),
                         Text('Select an activity with a specific type'),
-                        DropdownButton(
-                          value: dropdownvalue,
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          items: items.map((String items) {
-                            return DropdownMenuItem(
-                              onTap: () {},
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownvalue = newValue!;
-                              context
-                                  .read<RandomeventCubit>()
-                                  .fetchEventbytype(newValue);
-                            });
-                          },
-                        ),
+                        dropdownbutton(),
                         const SizedBox(
                           height: 20,
                         ),
@@ -186,7 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text('Add To Favorite')),
                       ]);
                 } else if (state is RandomeventFailure) {
-                  return result = Text("Error  ${state.errmsg}");
+                  return result = Center(
+                      child: Text(
+                    state.errmsg,
+                  ));
                 }
 
                 return result;

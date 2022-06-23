@@ -18,8 +18,10 @@ class RandomEventRepository {
     return EventModel.fromJson(event);
   }
 
-  Future<EventModel> getEventByPrice(num price) async {
+//Future<EventModel>
+  getEventByPrice(num price) async {
     final event = await requestService.requestEventbyPrice(price);
-    return EventModel.fromJson(event);
+    print("event === $event");
+    return event; //EventModel.fromJson(event);
   }
 }
