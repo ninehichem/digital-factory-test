@@ -4,10 +4,10 @@ import 'package:equatable/equatable.dart';
 
 class EventModel extends Equatable {
   final String activity;
-  final num accessibility;
+  final String accessibility;
   final String type;
-  final num participants;
-  final num price;
+  final String participants;
+  final String price;
   final String link;
   final String key;
 
@@ -21,13 +21,13 @@ class EventModel extends Equatable {
       required this.key});
 
   factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
-        activity: json["activity"] ,
-        accessibility: json["accessibility"],
+        activity: json["activity"],
+        accessibility: json["accessibility"].toString(),
         type: json["type"],
-        participants: json["participants"],
-        price: json["price"],
+        participants: json["participants"].toString(),
+        price: json["price"].toString(),
         link: json["link"],
-        key: json["key"],
+        key: json["key"].toString(),
       );
 
   @override

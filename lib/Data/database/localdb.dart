@@ -7,17 +7,16 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:digitalfactory/Data/models/eventModel.dart';
 
-
-
 class Staticvar {
-static  String table = "Eventtable";
-static  String columnId = "columnid";
-static  String activity = 'activity';
-static  String accessibility = "accessibility";
-static  String type = "type";
-static  String participants = "participants";
-static  String price = "price";
-static  String key = "key";
+  static String table = "Eventtable";
+  static String columnId = "columnid";
+  static String activity = 'activity';
+  static String accessibility = "accessibility";
+  static String type = "type";
+  static String participants = "participants";
+  static String price = "price";
+  static String key = "key";
+  static String link = "link";
 }
 
 // const String table1 = "Eventtable";
@@ -34,6 +33,7 @@ class Event {
   late String activity;
   late String accessibility;
   late String type;
+  String link = "";
   late String participants;
   late String price;
   late String key;
@@ -44,23 +44,24 @@ class Event {
   Event.fromMap(Map<String, dynamic> map) {
     id = map[Staticvar.columnId];
     accessibility = map[Staticvar.accessibility];
-    activity = map[ Staticvar.activity];
+    activity = map[Staticvar.activity];
     type = map[Staticvar.type];
     participants = map[Staticvar.participants];
     price = map[Staticvar.price];
     key = map[Staticvar.key];
+    link = map[Staticvar.link] ?? "";
   }
-  
 
   // convenience method to create a Map from this Word object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      Staticvar.accessibility : this.accessibility,
+      Staticvar.accessibility: this.accessibility,
       Staticvar.activity: this.activity,
       Staticvar.type: this.type,
-      Staticvar.participants : this.participants,
+      Staticvar.participants: this.participants,
       Staticvar.price: this.price,
-      Staticvar.key : this.key ,
+      Staticvar.key: this.key,
+      Staticvar.link: this.link,
       Staticvar.columnId: id
     };
 
@@ -104,6 +105,7 @@ class DataBaseHelper {
         ${Staticvar.activity} TEXT NOT NULL,
         ${Staticvar.key} TEXT NOT NULL,
         ${Staticvar.participants} TEXT NOT NULL,
+        ${Staticvar.link} TEXT NOT NULL,
         ${Staticvar.price} TEXT NOT NULL,
         ${Staticvar.type} TEXT NOT NULL
         )
@@ -126,17 +128,25 @@ class DataBaseHelper {
       Staticvar.activity,
       Staticvar.key,
       Staticvar.participants,
+      Staticvar.link,
       Staticvar.price,
       Staticvar.type
     ]);
+
     if (maps.length > 0) {
       return maps.toList();
     }
-    return null;
+    return [];
   }
 
   Future<int> delete(int id) async {
     Database db = await database;
-    return await db.delete(Staticvar.table, where: '_id = ?', whereArgs: [id]);
+    return await db.delete(Staticvar.table, where: '${Staticvar.columnId} = ?', whereArgs: [id]);
+  }
+
+  Future close() async {
+    final db = await instance.database;
+
+    db.close();
   }
 }

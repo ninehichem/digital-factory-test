@@ -1,4 +1,6 @@
 import 'package:digitalfactory/Data/database/localdb.dart';
+import 'package:digitalfactory/Presentation/screens/favoritescreen.dart';
+import 'package:digitalfactory/business_logic/favoriteevent/favoriteevent_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Data/repositories/randomeventrepo.dart';
@@ -46,6 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text('Random Event'),
           centerTitle: true,
           backgroundColor: Colors.purple,
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => FavoriteeventCubit(),
+                      child: FavoriteScreen(),
+                    ),
+                  ));
+                },
+                child: const Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                ))
+          ],
         ),
         //RandomeventCubit(RandomEventRepository(requestService: RequestService())
         body: SafeArea(
@@ -54,39 +71,48 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 Widget result = Container();
                 if (state is RandomeventLoading) {
-                  return result = CircularProgressIndicator();
+                  return result = Center(child: CircularProgressIndicator());
                 } else if (state is RandomeventSuccess) {
                   return result = Column(
                       //crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          'accessibility == ${state.eventModel!.accessibility}',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'activity == ${state.eventModel!.activity}',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'key == ${state.eventModel!.key}',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'link == ${state.eventModel!.link}',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'participants == ${state.eventModel!.participants}',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'price == ${state.eventModel!.price}',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'type == ${state.eventModel!.type}',
-                          style: TextStyle(color: Colors.black),
+                        Card(
+                          elevation: 0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.eventModel!.activity,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                'accessibility: ${state.eventModel!.accessibility}',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                'key == ${state.eventModel!.key}',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              if (state.eventModel!.link != "")
+                                Text(
+                                  'link: ${state.eventModel!.link}',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              Text(
+                                'participants: ${state.eventModel!.participants}',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                'price: ${state.eventModel!.price}',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                'type: ${state.eventModel!.type}',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
                         Center(
                           child: ElevatedButton(
@@ -125,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 20,
                         ),
                         Slider(
+                            label: slidervalue.toString(),
                             value: slidervalue,
                             min: 0,
                             max: 1,
